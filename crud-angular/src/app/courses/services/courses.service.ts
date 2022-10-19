@@ -2,17 +2,22 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Course } from '../model/course';
+import { first, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesService {
 
-  constructor(private httpClient: HttpClient) { }
+  private readonly API = '/assets/courses.json'; //talvez de erro...
 
-  list(): Course[]{
-    return  [
-      { _id: '1', name: 'Angular', category: 'front-end' }
-    ];
+  constructor(private httpClient: HttpClient) { } //injeção do httpClient
+
+  list(){
+    return this.httpClient.get<Course[]>(this.API)
+    .pipe(
+      first(),
+      tap(courses => console.log(courses))
+    );
   }
 }
